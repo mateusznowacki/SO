@@ -31,8 +31,15 @@ def main():
         host = sys.argv[1]
     else:
         host = HOST
+    port = PORT
+    if len(sys.argv) > 2:
+        try:
+            port = int(sys.argv[2])
+        except ValueError:
+            print('Usage: python client.py [host] [port]')
+            return
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((host, PORT))
+        s.connect((host, port))
         symbol = None
         while True:
             line = recv_line(s)

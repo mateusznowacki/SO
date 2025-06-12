@@ -1,4 +1,5 @@
 import socket
+import sys
 
 HOST = '0.0.0.0'
 PORT = 65432
@@ -48,12 +49,23 @@ def recv_line(conn):
 
 
 def main():
+    port = PORT
+    if len(sys.argv) > 1:
+        try:
+            port = int(sys.argv[1])
+        except ValueError:
+            print('Usage: python server.py [port]')
+            return
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         # Allow quick restart of the server by releasing the port immediately
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((HOST, PORT))
+        try:
+            s.bind((HOST, port))
+        except PermissionError:
+            print(f'Cannot bind to port {port}. Try a different port or run with administrator privileges.')
+            return
         s.listen()
-        print('Waiting for players on', PORT)
+        print('Waiting for players on', port)
         conn1, addr1 = s.accept()
         print('Player 1 connected from', addr1)
         conn1.sendall(b'START X\n')

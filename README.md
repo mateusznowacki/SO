@@ -9,18 +9,19 @@ connects via TCP.
 - `client.py` – connects to the server and lets a player choose moves.
 
 ## Running the game
-Start the server in one terminal:
+Start the server in one terminal. You can optionally choose the TCP port (default 65432):
 
 ```bash
-python server.py
+python server.py            # use default port 65432
+python server.py 12345      # choose a custom port
 ```
 
-Then start two clients (in separate terminals):
+Then start two clients (in separate terminals). Pass the host and port if you changed them:
 
 ```bash
-python client.py
-# Optionally specify server address
-python client.py 127.0.0.1
+python client.py                     # connect to localhost:65432
+# Optionally specify server address and port
+python client.py 127.0.0.1 12345
 ```
 
 Moves are entered using the standard numpad layout:
