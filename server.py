@@ -3,6 +3,14 @@ import socket
 HOST = '0.0.0.0'
 PORT = 65432
 
+# Map user numeric input to board index so that
+# 7 is the top-right corner and 1 the bottom-right.
+MOVE_MAP = {
+    1: 8, 2: 7, 3: 6,
+    4: 5, 5: 4, 6: 3,
+    7: 2, 8: 1, 9: 0,
+}
+
 
 def check_winner(board):
     winning_combos = [
@@ -53,6 +61,7 @@ def main():
         board = [' '] * 9
         current = conn1
         symbol = 'X'
+        winner = None
 
         while True:
             board_state = ''.join(c if c != ' ' else '.' for c in board)
@@ -63,11 +72,12 @@ def main():
             if line is None:
                 break
             try:
-                move = int(line.strip()) - 1
+                num = int(line.strip())
+                move = MOVE_MAP.get(num)
             except ValueError:
                 current.sendall(b'INVALID\n')
                 continue
-            if move < 0 or move > 8 or board[move] != ' ':
+            if move is None or board[move] != ' ':
                 current.sendall(b'INVALID\n')
                 continue
             board[move] = symbol
@@ -85,6 +95,11 @@ def main():
 
         conn1.close()
         conn2.close()
+        if winner:
+            if winner == 'draw':
+                print('Game finished: draw')
+            else:
+                print(f'Game finished: {winner} wins')
 
 
 if __name__ == '__main__':

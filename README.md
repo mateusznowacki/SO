@@ -23,14 +23,14 @@ python client.py
 python client.py 127.0.0.1
 ```
 
-Moves are entered as numbers 1–9 according to the positions:
+Moves are entered using a numpad-like layout with reversed numbering:
 
 ```
-1 | 2 | 3
+9 | 8 | 7
 ---------
-4 | 5 | 6
+6 | 5 | 4
 ---------
-7 | 8 | 9
+3 | 2 | 1
 ```
 
 The server keeps both players updated with simple text messages. Empty cells

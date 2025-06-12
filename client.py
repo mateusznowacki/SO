@@ -50,7 +50,7 @@ def main():
                 if turn == symbol:
                     print("Your turn")
             elif line == 'YOURMOVE':
-                move = input('Enter position (1-9): ')
+                move = input('Enter position (1-9) using numpad layout: ')
                 s.sendall((move + '\n').encode())
             elif line == 'INVALID':
                 print('Invalid move, try again')
@@ -60,9 +60,11 @@ def main():
                     print('You win!')
                 else:
                     print('You lose.')
+                input('Game over. Press Enter to exit.')
                 return
             elif line == 'DRAW':
                 print('Draw!')
+                input('Game over. Press Enter to exit.')
                 return
 
 
