@@ -18,9 +18,24 @@ def check_winner(board):
     return None
 
 
-def send(conn1, conn2, message):
-    for conn in (conn1, conn2):
-        conn.sendall(message.encode())
+def broadcast(conns, message):
+    """Send the same line of text to multiple connections."""
+    data = (message + "\n").encode()
+    for conn in conns:
+        conn.sendall(data)
+
+
+def recv_line(conn):
+    """Receive bytes from a socket until a newline is found."""
+    chunks = []
+    while True:
+        chunk = conn.recv(1)
+        if not chunk:
+            return None
+        if chunk == b"\n":
+            break
+        chunks.append(chunk)
+    return b"".join(chunks).decode()
 
 
 def main():
@@ -40,15 +55,14 @@ def main():
         symbol = 'X'
 
         while True:
-            state = 'BOARD ' + ''.join(board) + '\n'
-            send(conn1, conn2, state)
-            send(conn1, conn2, f'TURN {symbol}\n')
+            broadcast((conn1, conn2), 'BOARD ' + ''.join(board))
+            broadcast((conn1, conn2), f'TURN {symbol}')
             current.sendall(b'YOURMOVE\n')
-            data = current.recv(1024)
-            if not data:
+            line = recv_line(current)
+            if line is None:
                 break
             try:
-                move = int(data.decode().strip()) - 1
+                move = int(line.strip()) - 1
             except ValueError:
                 current.sendall(b'INVALID\n')
                 continue
@@ -58,12 +72,11 @@ def main():
             board[move] = symbol
             winner = check_winner(board)
             if winner:
-                state = 'BOARD ' + ''.join(board) + '\n'
-                send(conn1, conn2, state)
+                broadcast((conn1, conn2), 'BOARD ' + ''.join(board))
                 if winner == 'draw':
-                    send(conn1, conn2, 'DRAW\n')
+                    broadcast((conn1, conn2), 'DRAW')
                 else:
-                    send(conn1, conn2, f'WIN {winner}\n')
+                    broadcast((conn1, conn2), f'WIN {winner}')
                 break
             current = conn2 if current is conn1 else conn1
             symbol = 'O' if symbol == 'X' else 'X'

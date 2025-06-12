@@ -35,3 +35,9 @@ Moves are entered as numbers 1–9 according to the positions:
 
 The server sends text messages to keep both clients updated with the board
 state and notifies when someone wins or a draw occurs.
+
+To verify the scripts are syntactically correct you can run:
+
+```bash
+python -m py_compile server.py client.py
+```
