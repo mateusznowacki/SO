@@ -49,6 +49,8 @@ def recv_line(conn):
 
 def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        # Allow quick restart of the server by releasing the port immediately
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         s.bind((HOST, PORT))
         s.listen()
         print('Waiting for players on', PORT)
