@@ -3,12 +3,13 @@ import socket
 HOST = '0.0.0.0'
 PORT = 65432
 
-# Map user numeric input to board index so that
-# 7 is the top-right corner and 1 the bottom-right.
+# Map user numeric input to board index following the
+# standard numpad layout where 7 is the top-left corner
+# and 1 is the bottom-left.
 MOVE_MAP = {
-    1: 8, 2: 7, 3: 6,
-    4: 5, 5: 4, 6: 3,
-    7: 2, 8: 1, 9: 0,
+    7: 0, 8: 1, 9: 2,
+    4: 3, 5: 4, 6: 5,
+    1: 6, 2: 7, 3: 8,
 }
 
 
